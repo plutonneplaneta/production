@@ -23,8 +23,8 @@ class RouteView(QDialog):
 
         # Таблица маршрутов
         self.table = QTableWidget()
-        self.table.setColumnCount(4)
-        self.table.setHorizontalHeaderLabels(["ID", "Склад отправки", "Склад транзита", "Рейтинг маршрута"])
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(["ID", "Склад отправки", "Склад транзита", "Склад приёмки", "Рейтинг маршрута"])
         layout.addWidget(self.table)
 
         # Кнопки
@@ -52,6 +52,7 @@ class RouteView(QDialog):
             data = [
                 str(route.route_id),
                 str(get_warehouse_name_by_id(route.from_warehouse_id)),
+                str(get_warehouse_name_by_id(route.transit_warehouse_id)),
                 str(get_warehouse_name_by_id(route.to_warehouse_id)),
                 str(route.reliability_rating)
             ]
