@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QTableWidgetItem,QMessageBox,QLineEdit,QTableWidget,QComboBox,QVBoxLayout,QLabel,QHBoxLayout,QDialog,QWidget, QVBoxLayout, QTextEdit, QPushButton
-from models.user import User
+#from models.user import User
 from repositories.user_repository import get_user_by_username,get_all_users,create_user,delete_user_by_username
 
 """
@@ -12,8 +12,8 @@ from repositories.user_repository import get_user_by_username,get_all_users,crea
 """
 
 class UserView(QDialog):
-    def __init__(self, user=None):
-        super().__init__()
+    def __init__(self,parent = None, user=None):
+        super().__init__(parent)
         '''
         if user is None:
             raise ValueError("Пользователь не передан")

@@ -75,6 +75,6 @@ class MainWindow(QMainWindow):
 
     def open_user_management_view(self):
         from views.users.user_management_view import UserView
-        self.user_management_view = UserView(self, user=self.user)
+        self.user_management_view = UserView(parent = self, user=self.user)
         self.user_management_view.show()
 

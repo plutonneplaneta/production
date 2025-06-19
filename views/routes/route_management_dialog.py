@@ -34,9 +34,14 @@ class RouteManagementDialog(QDialog):
         warehouses = get_all_warehouses()
 
         for wh in warehouses:
-            self.from_warehouse_combo.addItem(wh.name, userData=wh.warehouse_id)
-            self.to_warehouse_combo.addItem(wh.name, userData=wh.warehouse_id)
-            self.transit_warehouse_combo.addItem(wh.name, userData=wh.warehouse_id)
+            if wh.is_active != 1:
+                continue
+            else:
+                self.from_warehouse_combo.addItem(wh.name, userData=wh.warehouse_id)
+                self.to_warehouse_combo.addItem(wh.name, userData=wh.warehouse_id)
+                self.transit_warehouse_combo.addItem(wh.name, userData=wh.warehouse_id)
+            
+
 
         # Если это редактирование — устанавливаем текущие значения
         if self.route:

@@ -21,6 +21,8 @@ def get_warehouse_name_by_id(warehouse_id:int):
     db = SessionLocal()
     try:
         warehouse = db.query(Warehouse).get(warehouse_id)
+        if warehouse_id is None:
+            return "-"
         return warehouse.name
     finally:
         db.close()

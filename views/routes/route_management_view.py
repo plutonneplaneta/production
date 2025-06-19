@@ -47,12 +47,15 @@ class RouteView(QDialog):
     def load_data(self):
         routes = get_all_transfer_routes()
         self.table.setRowCount(len(routes))
-
+        
         for row_idx, route in enumerate(routes):
+            transit_name = get_warehouse_name_by_id(route.transit_warehouse_id)
+            if transit_name is None:
+                transit_name = "-"
             data = [
                 str(route.route_id),
                 str(get_warehouse_name_by_id(route.from_warehouse_id)),
-                str(get_warehouse_name_by_id(route.transit_warehouse_id)),
+                str(transit_name),
                 str(get_warehouse_name_by_id(route.to_warehouse_id)),
                 str(route.reliability_rating)
             ]
