@@ -80,6 +80,8 @@ class RegisterShipmentView(QWidget):
             print("Ошибка при выборе заказа:", e)
             self.btn_send.setEnabled(False)
 
+    
+
     def send_selected_order(self):
         if not hasattr(self, 'selected_order_id') or not self.selected_order_id:
             return
@@ -90,7 +92,7 @@ class RegisterShipmentView(QWidget):
         from repositories.transfer_route_repository import get_transfer_route_by_order_id
         from repositories.stock_balance_repository import subtract_material_from_warehouse
         from repositories.material_repository import get_materials_by_order_id
-
+        from services.report_service import save_order_document, generate_shipment_content
 
         order_id = self.selected_order_id
         route = get_transfer_route_by_order_id(order_id)
@@ -106,6 +108,10 @@ class RegisterShipmentView(QWidget):
                 subtract_material_from_warehouse(route.from_warehouse_id, material_id, expected_quantity)
             update_shipment_data(self.selected_order_id)
             QMessageBox.information(self, "Успех", "Отправка зарегистрирована")
+            from repositories.transfer_order_repository import get_transfer_order_by_id
+            order = get_transfer_order_by_id(self.selected_order_id)
+            content = generate_shipment_content(order)
+            save_order_document(order.order_id, "shipment", content)
             self.close()
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Не удалось зарегистрировать отправку:\n{e}")

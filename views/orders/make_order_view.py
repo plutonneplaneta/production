@@ -232,6 +232,8 @@ class MakeOrderView(QWidget):
         print("Выбранные материалы с количеством:", selected_materials)
         return selected_materials
 
+    
+
     def create_order(self):
         if not isinstance(self.user, User):
             QMessageBox.critical(self, "Ошибка", "Пользователь не авторизован")
@@ -261,7 +263,15 @@ class MakeOrderView(QWidget):
                     material_id=material['material_id'],
                     quantity=material['quantity']
                 )
+            from repositories.material_repository import get_materials_by_order_id
+            from services.report_service import save_order_document,generate_order_content
+            from models.transfer_order import TransferOrder
 
+            order = db.query(TransferOrder).get(order_id)
+            materials = get_materials_by_order_id(order_id)
+            content = generate_order_content(order, materials)
+            save_order_document(order_id, "order", content)
+            
             db.commit()
             QMessageBox.information(self, "Успех", f"Заказ #{order_id} создан")
         except Exception as e:

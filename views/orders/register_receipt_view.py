@@ -69,7 +69,7 @@ class RegisterReceiptView(QWidget):
         from repositories.order_fill_repository import create_filling
         from services.route_service import process_delivery_with_loss
         from repositories.transfer_order_repository import get_transfer_order_by_id
-
+        from services.report_service import save_order_document, generate_receipt_content
         #order = get_transfer_order_by_id(self.selected_order_id)
         db = SessionLocal()
         try:
@@ -83,6 +83,9 @@ class RegisterReceiptView(QWidget):
             result = process_delivery_with_loss(db, order_id, route_id, self.user.user_id)
             receive_shipment(self.selected_order_id)
             QMessageBox.information(self, "Успех", "Заказ принят")
+            order = get_transfer_order_by_id(self.selected_order_id)
+            content = generate_receipt_content(order)
+            save_order_document(order.order_id, "receipt", content)
             self.close()
         except Exception as e:
             QMessageBox.critical(self,"Ошибка", f"Не удалось принять заказ:\n{e}")

@@ -74,3 +74,31 @@ def generate_route_reliability_report():
             report_lines.append("-" * 40)
 
     return report_lines
+
+import os
+
+def save_order_document(order_id: int, doc_type: str, content: str):
+    folder = os.path.join("reports", "orders", f"ORDER_{order_id}")
+    os.makedirs(folder, exist_ok=True)
+    filename = os.path.join(folder, f"{doc_type}.txt")
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(content)
+    return filename
+
+def generate_order_content(order, materials):
+    lines = [
+        f"Документ: Заказ #{order.order_id}",
+        f"Дата создания: {order.created_at}",
+        f"Статус: {order.status}",
+        f"Маршрут: {order.route_id}",
+        "Материалы:"
+    ]
+    for m in materials:
+        lines.append(f"  - ID: {m[0]}, Кол-во: {m[1]}")
+    return "\n".join(lines)
+
+def generate_shipment_content(order):
+    return f"Документ: Отправка заказа #{order.order_id}\nДата отправки: {order.shipment_date}\nСтатус: {order.status}"
+
+def generate_receipt_content(order):
+    return f"Документ: Приёмка заказа #{order.order_id}\nДата приёмки: {order.arrival_date}\nСтатус: {order.status}"
