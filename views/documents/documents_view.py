@@ -68,10 +68,10 @@ class DocumentView(QDialog):  # ← Теперь это диалог
             }
 
             self.table.setRowCount(len(materials))
-            for row_idx, material in enumerate(materials):
-                material_id = material.material_id
-                name = material.material.name if material.material else "Неизвестен"
-                quantity = float(material.quantity)
+            for row_idx, (material_id, quantity) in enumerate(materials):
+                # Получаем название материала по его ID
+                material_obj = db.query(Material).get(material_id)
+                name = material_obj.name if material_obj else "Неизвестен"
 
                 self.table.setItem(row_idx, 0, QTableWidgetItem(str(material_id)))
                 self.table.setItem(row_idx, 1, QTableWidgetItem(name))
@@ -80,6 +80,5 @@ class DocumentView(QDialog):  # ← Теперь это диалог
                 # Потери
                 loss_amount = loss_dict.get(material_id, 0)
                 self.table.setItem(row_idx, 3, QTableWidgetItem(str(loss_amount)))
-
         finally:
             db.close()
